@@ -6,7 +6,7 @@ services:
     environment: 
       ES_JAVA_OPTS: "-Xms1g -Xmx4g"
     ports:
-      - "9200:9200"  
+      - "172.17.0.1:9200:9200"  
     command:
       - sh
       - -c
