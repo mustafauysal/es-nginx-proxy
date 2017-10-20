@@ -1,0 +1,29 @@
+version: '3'
+services:
+  elasticsearch:
+    image: elasticsearch:5.5
+    restart: always
+    environment: 
+      ES_JAVA_OPTS: "-Xms1g -Xmx4g"
+    ports:
+      - "9200:9200"  
+    command:
+      - sh
+      - -c
+      - " ./bin/elasticsearch-plugin list | grep -q analysis-icu || ./bin/elasticsearch-plugin install analysis-icu;
+        /docker-entrypoint.sh elasticsearch"  
+    volumes:
+      - "./config/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml"
+      - "./data:/usr/share/elasticsearch/data"
+    
+  nginx:
+    image: nginx:latest
+    depends_on:
+      - elasticsearch
+    volumes:
+      - "./config/nginx.conf:/etc/nginx/nginx.conf"
+      - "./config/.htpasswd:/etc/nginx/.htpasswd"
+    ports:
+      - "80:80"
+      - "443:443"
+    restart: always
