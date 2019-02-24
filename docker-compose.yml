@@ -1,7 +1,7 @@
 version: '3'
 services:
   elasticsearch:
-    image: elasticsearch:5.5
+    image: docker.elastic.co/elasticsearch/elasticsearch:6.3.2
     restart: always
     environment: 
       ES_JAVA_OPTS: "-Xms1g -Xmx4g"
@@ -10,11 +10,16 @@ services:
     command:
       - sh
       - -c
-      - " ./bin/elasticsearch-plugin list | grep -q analysis-icu || ./bin/elasticsearch-plugin install analysis-icu;
-        /docker-entrypoint.sh elasticsearch"  
+      - " ./bin/elasticsearch-plugin install --batch analysis-icu;
+      ./bin/elasticsearch"
     volumes:
       - "./config/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml"
       - "./data:/usr/share/elasticsearch/data"
+    user: 1000:1000
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
     
   nginx:
     image: nginx:latest
