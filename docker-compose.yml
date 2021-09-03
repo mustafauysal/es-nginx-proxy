@@ -5,8 +5,6 @@ services:
     restart: always
     environment: 
       ES_JAVA_OPTS: "-Xms1g -Xmx4g"
-    ports:
-      - "172.17.0.1:9200:9200"  
     command:
       - sh
       - -c
